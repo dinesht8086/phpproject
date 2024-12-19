@@ -1,10 +1,11 @@
 <?php
-require_once "conn.php";
+require_once "layout/conn.php";
 include "layout/header.php";
 include "layout/nav.php";
 ?>
     <div class="container" id="stock">
         <h2>List of Stock Items</h2>
+         <button id="add_stock">Add Stocks</button>
         <table>
             <thead>
                 <tr>
@@ -20,9 +21,11 @@ include "layout/nav.php";
                 <?php
                 $sql = "SELECT id, particulars, mrp_price, selling_price, gst_rate, quantity FROM stocks";
                 $result = $conn->query($sql);
+                // print_r($result);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
+                        
                         echo "<tr>
                                 <td>" . htmlspecialchars($row['id']) . "</td>
                                 <td>" . htmlspecialchars($row['particulars']) . "</td>
@@ -35,10 +38,10 @@ include "layout/nav.php";
                 } else {
                     echo "<tr><td colspan='6'>No stock items found.</td></tr>";
                 }
-                ?>
+                // ?>
             </tbody>
         </table>
-        <button id="add_stock">Add Stocks</button>
+       
     </div>
 
     <!-- Modal -->
@@ -58,64 +61,6 @@ include "layout/nav.php";
             <button type="button" id="closeModal">Close</button>
         </form>
     </div>
-
-    
-
-    <script>
-        const addStockButton = document.getElementById('add_stock');
-        const modal = document.getElementById('modal');
-        const closeModalButton = document.getElementById('closeModal');
-        const form = document.getElementById('addStockForm');
-        const overlay = document.getElementById('overlay');
-
-        // Show modal
-        addStockButton.addEventListener('click', () => {
-            modal.style.display = 'block';
-             overlay.style.display = 'block';
-        });
-
-        // Hide modal
-        closeModalButton.addEventListener('click', () => {
-            modal.style.display = 'none';
-            overlay.style.display = 'none';
-        });
-
-        // Hide modal and overlay when clicking on the overlay itself
-overlay.addEventListener('click', () => {
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
-});
-
-        // Submit form using fetch
-        form.addEventListener('submit', (e) => {
-            // e.preventDefault();
-
-            const formData = new FormData(form);
-           
-            fetch('stock.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(message => {
-                alert(message); // Show success message
-                modal.style.display = 'none'; // Hide modal
-                 overlay.style.display = 'none';
-                form.reset(); // Reset form
-
-                // Refresh the stock list
-                fetch('stocklist.php')
-                    .then(response => response.text())
-                    .then(html => {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        document.getElementById('stockTable').innerHTML = doc.getElementById('stockTable').innerHTML;
-                    });
-            })
-            .catch(error => {
-                alert('Error: ' + error.message);
-            });
-        });
-    </script>
+ <script src = "script/stocklist.js"></script>
 <?php
 require "layout/footer.php"?>

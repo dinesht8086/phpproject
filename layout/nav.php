@@ -10,7 +10,7 @@
                 <a class="nav-link" href="customerlist.php">Customer</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="orderlist.php">Quick Order</a>
+                <a class="nav-link" href="createorder.php">Create Order</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>

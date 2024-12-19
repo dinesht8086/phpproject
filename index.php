@@ -14,7 +14,7 @@
 
     <!-- order page -->
 
-   <script>
+   <!-- <script>
     // Function to update total amount when the order quantity changes
     function updateTotal(input) {
         const price = parseFloat(input.dataset.price); // Get the price of the item
@@ -29,7 +29,7 @@
         const totalAmountElement = input.closest('tr').querySelector('.total-amount');
         totalAmountElement.textContent = `₹${totalAmount.toFixed(2)}`;
     }
-</script>
+</script> -->
 <?php
 include "layout/footer.php";
 ?>

@@ -127,12 +127,12 @@
      }
 
      #customer:hover {
-         background-color: #0056b3;
+         background-color: grey;
          transform: translateY(-2px);
      }
 
      #customer:active {
-         background-color: #003f7f;
+         background-color: #3f73a7;
          transform: translateY(0);
      }
 
@@ -297,6 +297,7 @@
 /* Modal styling */
 #modal {
     display: none;
+    width:40%;
     /* Hidden by default */
     position: fixed;
     top: 50%;
@@ -312,9 +313,147 @@
 
 
 /* Responsive Design: Adjust layout for smaller screens */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     #addStockFormContainer {
         width: 90%;
         padding: 15px;
     }
+} */
+
+
+
+/* Form Container Styling */
+#form-container {
+    display: flex;
+    flex-direction: column;
+    /* Stack items vertically */
+    gap: 15px;
+    /* Add spacing between form elements */
 }
+
+#form-container h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+/* Form Input and Textarea Styling */
+#form-container input[type="text"],
+#form-container textarea,
+#form-container input[type="number"] {
+    width: 100%;
+    /* Full width */
+    padding: 10px;
+    border: 1px solid #ccc;
+    /* Light gray border */
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#form-container textarea {
+    resize: none;
+    /* Disable resizing */
+}
+
+#form-container input:focus,
+#form-container textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    /* Highlight border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    /* Glow effect */
+}
+
+/* Button Styling */
+#form-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* transition: background 0.3s ease; */
+}
+
+#form-container button[type="submit"] {
+    background: #007bff;
+    /* Blue background */
+    color: #fff;
+    /* White text */
+}
+
+#form-container button[type="submit"]:hover {
+    background: #0056b3;
+    /* Darker blue on hover */
+}
+
+#form-container button[type="button"] {
+    background: #f44336;
+    /* Red background */
+    color: #fff;
+    /* White text */
+    margin-left: 10px;
+    /* Space from Submit button */
+}
+
+#form-container button[type="button"]:hover {
+    background: #d32f2f;
+    /* Darker red on hover */
+}
+
+#additem_button,#orderitem_button {
+    background-color: rgb(9, 156, 126);
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#additem_button:hover,#orderitem_button:hover {
+    background-color: grey;
+   
+}
+
+#item_select {
+    width: 200px;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+}
+#item_select option {
+    padding: 5px;
+}
+
+/* Hover effect for dropdown */
+#item_select:hover {
+    border-color: #888;
+  
+}
+
+/* orderobbutton */
+#orderokbtn,#orderremovebtn{
+    background-color: rgb(9, 156, 126);
+        color: white;
+        font-size: 16px;
+        padding: 8px 18px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+#orderokbtn:hover,#orderremovebtn:hover{
+    background-color: grey;
+}
+
+
+
+
+
