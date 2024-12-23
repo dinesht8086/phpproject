@@ -4,10 +4,12 @@ include "layout/header.php";
 include "layout/nav.php";    
 ?>
 
+
+
 <h2>Create Order</h2>
 
 <!-- Main Form -->
-<form id="orderForm" action="" method="POST">
+<form id="orderForm" name="orderForm" action="orders.php" method="POST">
     <!-- Customer Selection -->
     <label for="customer">Customer:</label>
     <select id="customer" name="customer_id" required>
@@ -38,6 +40,8 @@ include "layout/nav.php";
             <tr>
                 <th>Item ID</th>
                 <th>Particulars</th>
+                <th>Quantity</th>
+                <th>Available Quantity</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -46,7 +50,7 @@ include "layout/nav.php";
         </tbody>
     </table>
 
-    <button id = "orderitem_button"type="submit">Submit Order</button>
+    <button id = "orderitem_button"type="submit" name="submitOrder">Submit Order</button>
 </form>
 
 <!-- Modal and Overlay -->
@@ -60,12 +64,13 @@ include "layout/nav.php";
             <option value="">-- Select Item --</option>
             <?php
             // Fetch items from the 'stocks' table
-            $sql = "SELECT id, particulars FROM stocks";
+            $sql = "SELECT id, particulars, quantity FROM stocks";
             $result = $conn->query($sql);
 
             if ($result && $result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    echo '<option value="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['particulars']) . '</option>';
+                    echo '<option value="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['particulars']) . ' (' . htmlspecialchars($row['quantity']) . ' available)</option>';
+
                 }
             } else {
                 echo '<option value="">No items available</option>';
@@ -79,336 +84,144 @@ include "layout/nav.php";
 
 
 <script>
-    // const modal = document.getElementById('modal');
-    // const overlay = document.getElementById('overlay');
-    // const orderitem_button = document.getElementById('additem_button');
-    // const modal_add_btn = document.getElementById('orderokbtn');
-    // const modal_remove_btn = document.getElementById('orderremovebtn');
-    // const selectedItemsTable = document.getElementById('selectedItemsTable').querySelector('tbody');
-    // const itemselect = document.getElementById('item_select');
-    // const form = document.getElementById('order_form');
+const modal = document.getElementById('modal');
+const overlay = document.getElementById('overlay');
+const orderitem_button = document.getElementById('additem_button');
+const modal_add_btn = document.getElementById('orderokbtn');
+const selectedItemsTable = document.getElementById('selectedItemsTable').querySelector('tbody');
+const itemselect = document.getElementById('item_select');
 
-    //  function displayItems() {
-    //     selectedItemsTable.innerHTML = ''; // Clear the table
-    //     selectedItems.forEach(item => {
-    //         addItemToTable(item.id, item.text);
-    //     });
-    // }
-    // displayItems(); // Call on page load
+// Load selected items from localStorage
+let selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || [];
+console.log(selectedItems);
 
+// Display items on page load
+function displayItems() {
+    selectedItemsTable.innerHTML = ''; // Clear the table
+    selectedItems.forEach(item => {
+        addItemToTable(item.id, item.text, item.quantity, item.available);
+    });
+}
+displayItems(); // Call on page load
 
-    // // submit button
-    // orderitem_button.addEventListener('click', () => {
-    //     modal.style.display = 'block';
-    //     overlay.style.display = 'block';
-    // });
+// Open modal
+orderitem_button.addEventListener('click', () => {
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+});
 
-    // // Function to close modal
-    // function closeModal() {
-    //     modal.style.display = 'none';
-    //     overlay.style.display = 'none';
-    //     itemselect.value = ""; // Reset dropdown
-    // }
+// Close modal
+function closeModal() {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+    itemselect.value = ""; // Reset dropdown
+}
+overlay.addEventListener('click', closeModal);
 
-    //  overlay.addEventListener('click', closeModal);
+// Add item from modal to table
+modal_add_btn.addEventListener('click', (e) => {
+    e.preventDefault();
 
-          
-    // modal_add_btn.addEventListener('click', (e) => {
-    //     e.preventDefault();
+    const selecteditemid = itemselect.value;  //itemid
+    // console.log(selecteditemid);
+    const selecteditemtext = itemselect.options[itemselect.selectedIndex].text;
+    // console.log(selecteditemtext);
 
-        
-    //     const selecteditemid = itemselect.value;
-    //     const selecteditemtext = itemselect.options[itemselect.selectedIndex].text;
-
-
-    //     if (!selecteditemid) {
-    //         alert('Please select an item.');
-    //         return;
-    //     }
-
-    //     if (selectedItems.includes(selecteditemid)) {
-    //          alert('Item already added.');
-    //          return;
-    //     }
-        
-
-    //     // Add item to the table and array
-    //     addItemToTable(selecteditemid, selecteditemtext);
-    //     selectedItems.push({ id: selecteditemid, text: selecteditemtext });
-
-    //     // Save to localStorage
-    //     localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-
-    //     closeModal();
-
-    // });
-
-
-
-    //     function addItemToTable(id, text) {
-    //         const row = document.createElement('tr');
-    //         row.innerHTML = `
-    //             <td>${id}</td>
-    //             <td>${text}</td>
-    //             <td><button type="button" class="removeItemBtn" data-id="${id}">Remove</button></td>
-    //         `;
-    //         selectedItemsTable.appendChild(row);
-
-    //         // Add event listener to remove button
-    //         row.querySelector('.removeItemBtn').addEventListener('click', (e) => {
-    //             const button = e.target;
-    //             const idToRemove = button.getAttribute('data-id');
-
-    //             // Remove item from table and array
-    //             button.closest('tr').remove();
-    //             selectedItems = selectedItems.filter(item => item.id !== idToRemove);
-
-    //             // Update localStorage
-    //             localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-    //         });
-
-    // }
-
-
-
-
-
-    const modal = document.getElementById('modal');
-    const overlay = document.getElementById('overlay');
-    const orderitem_button = document.getElementById('additem_button');
-    const modal_add_btn = document.getElementById('orderokbtn');
-    const selectedItemsTable = document.getElementById('selectedItemsTable').querySelector('tbody');
-    const itemselect = document.getElementById('item_select');
-
-    // Load selected items from localStorage
-    let selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || [];
-
-    // Display items on page load
-    function displayItems() {
-        selectedItemsTable.innerHTML = ''; // Clear the table
-        selectedItems.forEach(item => {
-            addItemToTable(item.id, item.text);
-        });
+    if (!selecteditemid) {
+        alert('Please select an item.');
+        return;
     }
-    displayItems(); // Call on page load
 
-    // Open modal
-    orderitem_button.addEventListener('click', () => {
-        modal.style.display = 'block';
-        overlay.style.display = 'block';
+     /// Check if the item is already added
+if (selectedItems.some(item => item.id === selecteditemid)) {
+    alert('Item already added.');
+    return;
+}
+
+    // Extract particulars and available quantity from the selected text
+    const itemDetails = selecteditemtext.match(/(.*) \((\d+) available\)/);
+    console.log(itemDetails);
+    const particulars = itemDetails ? itemDetails[1] : selecteditemtext;
+    console.log(particulars);
+    const availableQuantity = itemDetails ? itemDetails[2] : 0;
+    console.log(availableQuantity);
+   
+   
+
+    // Add item to the table and array
+    const item = {
+        id: selecteditemid,
+        text: particulars,
+        quantity: 1, // default quantity
+        available: availableQuantity // store available quantity
+    };
+    addItemToTable(item.id, item.text, item.quantity, item.available);
+    selectedItems.push(item);
+
+    // Save to localStorage
+    localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+
+    closeModal();
+});
+
+// Function to add a row to the table
+function addItemToTable(id, text, quantity, available) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${id}<input type="hidden" name="itemIds[]" value="${id}" </td>
+        <td>${text}</td>
+        <td>
+            <input name="itemQts[]" type="number" value="${quantity}" class="quantityInput" data-id="${id}" min="1" max="${available}" style="width:60px" />
+        </td>
+        <td>${available}</td>
+        <td>
+            <button type="button" class="removeItemBtn" data-id="${id}">Remove</button>
+        </td>
+    `;
+    selectedItemsTable.appendChild(row);
+
+    // Add event listener to the quantity input
+    const quantityInput = row.querySelector('.quantityInput');
+    quantityInput.addEventListener('input', (e) => {
+        const newQuantity = e.target.value;
+        const itemId = e.target.getAttribute('data-id');
+
+        // Check if the entered quantity is within limits
+        if (newQuantity > available) {
+            alert(`Quantity cannot exceed available quantity (${available}).`);
+            e.target.value = available; // Reset to max available
+            return;
+        }
+
+        updateItemQuantity(itemId, newQuantity);
     });
 
-    // Close modal
-    function closeModal() {
-        modal.style.display = 'none';
-        overlay.style.display = 'none';
-        itemselect.value = ""; // Reset dropdown
-    }
-    overlay.addEventListener('click', closeModal);
+    // Add event listener to remove button
+    row.querySelector('.removeItemBtn').addEventListener('click', (e) => {
+        const button = e.target;
+        const idToRemove = button.getAttribute('data-id');
 
-    // Add item from modal to table
-    modal_add_btn.addEventListener('click', (e) => {
-        e.preventDefault();
+        // Remove item from table and array
+        button.closest('tr').remove();
+        selectedItems = selectedItems.filter(item => item.id !== idToRemove);
 
-        const selecteditemid = itemselect.value;
-        const selecteditemtext = itemselect.options[itemselect.selectedIndex].text;
-
-        if (!selecteditemid) {
-            alert('Please select an item.');
-            return;
-        }
-
-        if (selectedItems.some(item => item.id === selecteditemid)) {
-            alert('Item already added.');
-            return;
-        }
-
-        // Add item to the table and array
-        addItemToTable(selecteditemid, selecteditemtext);
-        selectedItems.push({ id: selecteditemid, text: selecteditemtext });
-
-        // Save to localStorage
+        // Update localStorage
         localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+    });
+}
 
-        closeModal();
+// Update the quantity of an item in the selectedItems array and localStorage
+function updateItemQuantity(id, newQuantity) {
+    selectedItems = selectedItems.map(item => {
+        if (item.id === id) {
+            item.quantity = parseInt(newQuantity, 10);
+        }
+        return item;
     });
 
-    // Function to add a row to the table
-    function addItemToTable(id, text) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${id}</td>
-            <td>${text}</td>
-            <td><button type="button" class="removeItemBtn" data-id="${id}">Remove</button></td>
-        `;
-        selectedItemsTable.appendChild(row);
-
-        // Add event listener to remove button
-        row.querySelector('.removeItemBtn').addEventListener('click', (e) => {
-            const button = e.target;
-            const idToRemove = button.getAttribute('data-id');
-
-            // Remove item from table and array
-            button.closest('tr').remove();
-            selectedItems = selectedItems.filter(item => item.id !== idToRemove);
-
-            // Update localStorage
-            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-        });
-    }
-
-
-//     orderitem_button.addEventListener('click', () => {
-//         modal.style.display = 'block';
-//         overlay.style.display = 'block';
-//     });
-
-//     // Function to close modal
-//     function closeModal() {
-//     modal.style.display = 'none';
-//     overlay.style.display = 'none';
-//     itemSelect.value = ""; // Reset dropdown
-// }
-
-
-//     // Close modal when overlay is clicked
-//     overlay.addEventListener('click', closeModal);
-//     let selectedItems = [];
-
-//     modal_add_btn.addEventListener('click',(e)=>{
-
-//          e.preventDefault();
-         
-//         const selecteditemid = itemselect.value;
-//         const selecteditemtext = itemselect.options[itemselect.selectedIndex].text;
-//         // console.log(selecteditemtext);
-
-//         if(!selecteditemid ){
-//             alert('please select an item.');
-//             return;
-//         }
-
-//         if (selectedItems.includes(selecteditemid)) {
-//             alert('Item already added.');
-//             return;
-//         }
-
-
-//          const row = document.createElement('tr');
-//         row.innerHTML = `
-//             <td>${selecteditemid}</td>
-//             <td>${selecteditemtext}</td>
-//             <td><button type="button" class="removeItemBtn" data-id="">Remove</button></td>`;
-             
-
-//               selectedItemsTable.appendChild(row);
-
-//               // Add item to the list of selected items  
-//               selectedItems.push(selecteditemid);
-           
-//                // Add event listener to remove button dynamically
-//     row.querySelector('.removeItemBtn').addEventListener('click', (e) => {
-//         const button = e.target;
-//         const idToRemove = button.getAttribute('data-id');
-
-//         // Remove row from table
-//         button.closest('tr').remove();
-
-//         // Remove ID from the selectedItems array
-//         selectedItems = selectedItems.filter(item => item !== idToRemove);
-//     });
-               
-//                  closeModal();
-
-//         });
-
-
-
-
-
-//     const modal = document.getElementById('modal');
-//     const overlay = document.getElementById('overlay');
-//     const orderitem_button = document.getElementById('additem_button');
-//     const modal_add_btn = document.getElementById('orderokbtn');
-//     const selectedItemsTable = document.getElementById('selectedItemsTable').querySelector('tbody');
-//     const itemselect = document.getElementById('item_select');
-
-//     // Load selected items from localStorage
-//     let selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || [];
-
-//     // Display items on page load
-//     function displayItems() {
-//         selectedItemsTable.innerHTML = ''; // Clear the table
-//         selectedItems.forEach(item => {
-//             addItemToTable(item.id, item.text);
-//         });
-//     }
-//     displayItems(); // Call on page load
-
-//     orderitem_button.addEventListener('click', () => {
-//         modal.style.display = 'block';
-//         overlay.style.display = 'block';
-//     });
-
-//     // Function to close modal
-//     function closeModal() {
-//         modal.style.display = 'none';
-//         overlay.style.display = 'none';
-//         itemselect.value = ""; // Reset dropdown
-//     }
-
-//     overlay.addEventListener('click', closeModal);
-
-//     modal_add_btn.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         const selecteditemid = itemselect.value;
-//         const selecteditemtext = itemselect.options[itemselect.selectedIndex].text;
-
-//         if (!selecteditemid) {
-//             alert('Please select an item.');
-//             return;
-//         }
-
-//         if (selectedItems.some(item => item.id === selecteditemid)) {
-//             alert('Item already added.');
-//             return;
-//         }
-
-//         // Add item to the table and array
-//         addItemToTable(selecteditemid, selecteditemtext);
-//         selectedItems.push({ id: selecteditemid, text: selecteditemtext });
-
-//         // Save to localStorage
-//         localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-
-//         closeModal();
-//     });
-
-//     function addItemToTable(id, text) {
-//         const row = document.createElement('tr');
-//         row.innerHTML = `
-//             <td>${id}</td>
-//             <td>${text}</td>
-//             <td><button type="button" class="removeItemBtn" data-id="${id}">Remove</button></td>
-//         `;
-//         selectedItemsTable.appendChild(row);
-
-//         // Add event listener to remove button
-//         row.querySelector('.removeItemBtn').addEventListener('click', (e) => {
-//             const button = e.target;
-//             const idToRemove = button.getAttribute('data-id');
-
-//             // Remove item from table and array
-//             button.closest('tr').remove();
-//             selectedItems = selectedItems.filter(item => item.id !== idToRemove);
-
-//             // Update localStorage
-//             localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
-//         });
-//     }
-
-
+    // Update localStorage
+    localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+}
         
 </script>
 

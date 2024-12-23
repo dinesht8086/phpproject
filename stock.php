@@ -1,5 +1,5 @@
 <?php
-require_once "conn.php"; // Connect to the database
+require_once "layout/conn.php"; // Connect to the database
 
 // Check if the form is submitted via POST request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -410,6 +410,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin: 11px 0 11px 0 ;
     transition: background-color 0.3s ease;
 }
 
@@ -448,6 +449,7 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        margin: 0 15px 0 20px;
     }
 #orderokbtn:hover,#orderremovebtn:hover{
     background-color: grey;
