@@ -112,7 +112,7 @@
      }
 
      /* Button Styling */
-     #customer {
+     #customer,#customer_id {
          background-color: rgb(9, 156, 126);
          color: white;
          border: none;
@@ -126,17 +126,17 @@
          margin: 20px 0px;
      }
 
-     #customer:hover {
+     #customer:hover,#customer_id:hover {
          background-color: grey;
          transform: translateY(-2px);
      }
 
-     #customer:active {
+     /* #customer:active,#customer_id:active {
          background-color: #3f73a7;
          transform: translateY(0);
-     }
+     } */
 
-     #customer:focus {
+     #customer:focus,#customer_id:focus {
          outline: 2px solid #80bdff;
          /* Focus outline for accessibility */
          outline-offset: 2px;
@@ -455,7 +455,81 @@
     background-color: grey;
 }
 
+.htag_order{
+    text-align: center;
+    color: #2c3e50;
+        font-size: 1.8em;
+        margin-bottom: 0.5em;
+}
+h5 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+}
 
+p {
+    font-size: 1em;
+    /* margin: 0.5em 0; */
+    line-height: 1.5;
+}
 
+/* Container Styles */
+.order_container {
+    max-width: 100%;
+    margin: 2em auto;
+    padding: 1em;
+    /* background-color: #ffffff; */
+    border-radius: 8px;
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+}
 
+/* Highlighted Text */
+strong {
+    color: #2c3e50;
+}
 
+/* No Order Details Found */
+.no-order {
+    color: #e74c3c;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.printbtn {
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.printbtn:hover {
+    background-color: #45a049;
+}
+.printbtn-container {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.main-container {
+    
+    width: 80%;
+    margin: 10 auto;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+@media print {
+    .printbtn-container {
+        visibility: hidden;
+        display: none;
+        opacity: 0;
+    }
+}

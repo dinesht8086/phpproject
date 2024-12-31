@@ -13,7 +13,7 @@
                 <a class="nav-link" href="createorder.php">Create Order</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="orderlist.php">Order List</a>
             </li>
         </ul>
     </nav>

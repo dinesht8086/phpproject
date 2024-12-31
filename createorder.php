@@ -9,7 +9,7 @@ include "layout/nav.php";
 <h2>Create Order</h2>
 
 <!-- Main Form -->
-<form id="orderForm" name="orderForm" action="orders.php" method="POST">
+<form id="orderForm" name="orderForm" action="order-detail.php" method="POST">
     <!-- Customer Selection -->
     <label for="customer">Customer:</label>
     <select id="customer" name="customer_id" required>
@@ -181,20 +181,48 @@ function addItemToTable(id, text, quantity, available) {
     selectedItemsTable.appendChild(row);
 
     // Add event listener to the quantity input
-    const quantityInput = row.querySelector('.quantityInput');
-    quantityInput.addEventListener('input', (e) => {
-        const newQuantity = e.target.value;
-        const itemId = e.target.getAttribute('data-id');
+     const quantityInput = row.querySelector('.quantityInput');
+    //  quantityInput.addEventListener('input', (e) => {
+    //     const newQuantity = e.target.value;
+    //     const itemId = e.target.getAttribute('data-id');
 
-        // Check if the entered quantity is within limits
-        if (newQuantity > available) {
-            alert(`Quantity cannot exceed available quantity (${available}).`);
-            e.target.value = available; // Reset to max available
-            return;
-        }
+    //     // Check if the entered quantity is within limits
+    //     if (newQuantity > available) {
+    //         alert(`Quantity cannot exceed available quantity (${available}).`);
+    //         e.target.value = available; // Reset to max available
+    //         return;
+    //     }
 
-        updateItemQuantity(itemId, newQuantity);
-    });
+    //     updateItemQuantity(itemId, newQuantity);
+    // });
+
+
+
+    // Add event listener to the quantity input
+     quantityInput.addEventListener('input', (e) => {
+    const newQuantity = parseInt(e.target.value, 10); // Get the new quantity
+    const itemId = e.target.getAttribute('data-id'); // Get the item ID
+    const maxQuantity = parseInt(e.target.getAttribute('max'), 10); // Get the max allowed quantity
+
+    // Validate the entered quantity
+    if (newQuantity > maxQuantity) {
+        alert(`Quantity cannot exceed available quantity (${maxQuantity}).`);
+        e.target.value = maxQuantity; // Reset to the max available if exceeded
+        updateItemQuantity(itemId, maxQuantity); // Update with max quantity
+        return;
+    }
+
+    if (newQuantity < 1 || isNaN(newQuantity)) {
+        alert('Quantity must be at least 1.');
+        e.target.value = 1; // Reset to minimum quantity
+        updateItemQuantity(itemId, 1); // Update with minimum quantity
+        return;
+    }
+
+    // If valid, update the quantity
+    updateItemQuantity(itemId, newQuantity);
+});
+
 
     // Add event listener to remove button
     row.querySelector('.removeItemBtn').addEventListener('click', (e) => {
@@ -222,6 +250,31 @@ function updateItemQuantity(id, newQuantity) {
     // Update localStorage
     localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
 }
+
+
+
+// Clear localStorage on form submission
+const orderForm = document.getElementById('orderForm');
+orderForm.addEventListener('submit', () => {
+    localStorage.removeItem('selectedItems');
+    //  clearTable(); // Clear the table
+     selectedItems = []; // Reset the array
+    console.log('Local storage cleared after form submission.');
+});
+
+// Function to clear the table
+function clearTable() {
+    selectedItemsTable.innerHTML = '';
+    console.log('Table cleared.');
+}
+<?php
+   include "layout/conn.php";
+   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitOrder'])) {
+      $itemIds = $_POST['itemIds']; 
+      $itemQuantities = $_POST['itemQts']; 
+
+   }
+?>
         
 </script>
 
