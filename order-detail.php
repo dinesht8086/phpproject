@@ -84,7 +84,7 @@ $orderItemsResult = $conn->query($orderItemsSql);
 $orderSelectSql = "SELECT o.order_id, o.order_subtotal, o.discount_total, o.order_total, ud.fullname, ud.user_address, ud.phone 
                    FROM billingsystem.order o
                    JOIN userdetail ud ON o.user_id = ud.detail_id
-                   WHERE o.order_id = (SELECT MAX(order_id) FROM billingsystem.order)";
+                   WHERE o.order_id = ".$_GET['order_id'];
             
                    
 $orderResult = $conn->query($orderSelectSql);
