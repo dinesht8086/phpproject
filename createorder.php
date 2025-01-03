@@ -12,7 +12,7 @@ include "layout/nav.php";
 <form id="orderForm" name="orderForm" action="order-detail.php" method="POST">
     <!-- Customer Selection -->
     <label for="customer">Customer:</label>
-    <select id="customer" name="customer_id" required>
+    <select id="customer" name="customer_id" required >
         <option value="">-- Select Customer --</option>
         <?php
         $sql = "SELECT detail_id, fullname FROM userdetail";
@@ -60,7 +60,7 @@ include "layout/nav.php";
     <form id="order_form">
         <!-- Dropdown for Items -->
         <label for="item_select">Item:</label>
-        <select name="item_select" id="item_select" required>
+        <select name="item_select" id="item_select"  multiple required>
             <option value="">-- Select Item --</option>
             <?php
             // Fetch items from the 'stocks' table
@@ -212,12 +212,12 @@ function addItemToTable(id, text, quantity, available) {
         return;
     }
 
-    if (newQuantity < 1 || isNaN(newQuantity)) {
-        alert('Quantity must be at least 1.');
-        e.target.value = 1; // Reset to minimum quantity
-        updateItemQuantity(itemId, 1); // Update with minimum quantity
-        return;
-    }
+    // if (newQuantity < 1 || isNaN(newQuantity)) {
+        // alert('Quantity must be at least 1.');
+        // e.target.value = 1; // Reset to minimum quantity
+        // updateItemQuantity(itemId, 1); // Update with minimum quantity
+        // return;
+    // }
 
     // If valid, update the quantity
     updateItemQuantity(itemId, newQuantity);
@@ -260,6 +260,7 @@ orderForm.addEventListener('submit', () => {
     //  clearTable(); // Clear the table
      selectedItems = []; // Reset the array
     console.log('Local storage cleared after form submission.');
+    windows.reload();
 });
 
 // Function to clear the table
@@ -267,14 +268,18 @@ function clearTable() {
     selectedItemsTable.innerHTML = '';
     console.log('Table cleared.');
 }
-<?php
-   include "layout/conn.php";
-   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitOrder'])) {
-      $itemIds = $_POST['itemIds']; 
-      $itemQuantities = $_POST['itemQts']; 
 
-   }
-?>
+
+
+
+// <?php
+//    include "layout/conn.php";
+//    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitOrder'])) {
+//       $itemIds = $_POST['itemIds']; 
+//       $itemQuantities = $_POST['itemQts']; 
+
+//    }
+// ?>
         
 </script>
 

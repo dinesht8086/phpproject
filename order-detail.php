@@ -2,13 +2,13 @@
  ini_set('display_errors', E_ALL);
 
 error_reporting(1);
+$lastOrderId = "";
 include "layout/conn.php";
-
 if(isset($_POST['submitOrder'])) {
     $itemIds = $_POST['itemIds'];
     $customerId= $_POST['customer_id'];
     $itemQtys = $_POST['itemQts'];
-
+    
     $sql = "SELECT * FROM `stocks` WHERE id in (".implode(',', $itemIds).")";
 
     $result = $conn->query($sql);
@@ -53,6 +53,17 @@ if(isset($_POST['submitOrder'])) {
                 $itemsSql.="($lastOrderId, ".$itemRow['id'].", ".$itemRow['qty'].", ".$itemRow['price'].", ".$itemRow['sub_total'].", ".$itemRow['total'].")";
             }
             $itemInsert = $conn->query($itemsSql);
+
+             // Update stock quantity after order is placed
+             foreach($itemList as $itemRow){
+                $stockId = $itemRow['id'];
+                $orderedQty = $itemRow['qty'];
+                $updateStockSql = "UPDATE stocks SET quantity = quantity - $orderedQty WHERE id = $stockId";
+                // print_r($updateStockSql);
+                $conn->query($updateStockSql); 
+             }
+
+
         }
     }
 }
@@ -69,12 +80,16 @@ include "layout/header.php";
 //  include "layout/nav.php"; 
 include "layout/conn.php";   
 
+$orderDetailId = $lastOrderId;
+if(isset($_GET['order_id'])){
+    $orderDetailId = $_GET['order_id'];
+} 
 
 // Fetch the latest order's items to display in the table
 $orderItemsSql = "SELECT oi.order_item_id, s.particulars, oi.quantity, oi.sub_total 
                   FROM order_items oi 
                   JOIN stocks s ON oi.stock_item_id = s.id 
-                  WHERE oi.order_id =".$_GET['order_id'];
+                  WHERE oi.order_id =".$orderDetailId;
                   
 $orderItemsResult = $conn->query($orderItemsSql);
 
@@ -84,7 +99,7 @@ $orderItemsResult = $conn->query($orderItemsSql);
 $orderSelectSql = "SELECT o.order_id, o.order_subtotal, o.discount_total, o.order_total, ud.fullname, ud.user_address, ud.phone 
                    FROM billingsystem.order o
                    JOIN userdetail ud ON o.user_id = ud.detail_id
-                   WHERE o.order_id = ".$_GET['order_id'];
+                   WHERE o.order_id = ".$orderDetailId;
             
                    
 $orderResult = $conn->query($orderSelectSql);

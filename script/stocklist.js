@@ -27,6 +27,7 @@
             e.preventDefault();
 
             const formData = new FormData(form);
+            console.log(formData);
            
             fetch('stock.php', {
                 method: 'POST',

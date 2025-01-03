@@ -15,13 +15,13 @@ $selectedCustomerId = isset($_GET['customer_id']) ? $_GET['customer_id'] : null;
 
 // Fetch the order list for the selected customer
 $orderListSql = "SELECT o.order_id, o.order_subtotal, o.discount_total, o.order_total
-                     FROM billingsystem.order o";
+                     FROM billingsystem.order o "; //Order By o.order_id DESC
 if ($selectedCustomerId) {
     $orderListSql .= " WHERE o.user_id = '" . $conn->real_escape_string($selectedCustomerId) . "'";
 }
 
-echo $orderListSql;
-
+// echo $orderListSql;
+$orderListSql .= " ORDER BY o.order_id DESC";
 $orderListResult = $conn->query($orderListSql);
 
 ?>

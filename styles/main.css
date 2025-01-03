@@ -181,7 +181,7 @@
          #orderlist:hover,
                  #add_stock:hover
         {
-             background-color: #0056b3;
+             background-color: grey;
             
              transform: translateY(-2px);
              
@@ -254,6 +254,8 @@
 
 /* Style for the buttons */
 #addStockForm button {
+    background-color:#f44336;
+    color:white;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -264,10 +266,12 @@
 
 /* Style for the submit button */
 #addStockForm button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: rgb(9, 156, 126);
     color: white;
 }
-
+#addStockForm button[type="submit"]:hover{
+    background-color: grey;
+}
 /* Style for the cancel button */
 #cancelForm {
     background-color: #f44336;
@@ -338,15 +342,14 @@
     text-align: center;
 }
 
-/* Form Input and Textarea Styling */
+
 #form-container input[type="text"],
 #form-container textarea,
 #form-container input[type="number"] {
     width: 100%;
-    /* Full width */
+    margin: 10px 0px;
     padding: 10px;
     border: 1px solid #ccc;
-    /* Light gray border */
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
@@ -354,20 +357,16 @@
 
 #form-container textarea {
     resize: none;
-    /* Disable resizing */
 }
 
 #form-container input:focus,
 #form-container textarea:focus {
     outline: none;
     border-color: #007bff;
-    /* Highlight border color on focus */
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    /* Glow effect */
 }
-
-/* Button Styling */
 #form-container button {
+    margin:15px 0px;
     padding: 10px 20px;
     font-size: 16px;
     border: none;
@@ -377,14 +376,12 @@
 }
 
 #form-container button[type="submit"] {
-    background: #007bff;
-    /* Blue background */
+    background: rgb(9, 156, 126);
     color: #fff;
-    /* White text */
 }
 
 #form-container button[type="submit"]:hover {
-    background: #0056b3;
+    background:grey
     /* Darker blue on hover */
 }
 
