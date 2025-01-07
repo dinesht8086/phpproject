@@ -1,30 +1,17 @@
-     /* Basic reset */
      * {
          margin: 0;
          padding: 0;
          box-sizing: border-box;
      }
 
-     /* Body Styling */
      body {
          font-family: Arial, sans-serif;
          background-color: #f4f4f4;
          color: #333;
-     }
-
-     /* Header Styling */
-     /* header {
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
+         margin-left: 250px;
+         padding: 20px;
         }
-
-        header h1 {
-            font-size: 2rem;
-        } */
-
-     /* Sidebar Styling */
+            
      .sidebar {
          width: 250px;
          height: 100%;
@@ -68,13 +55,6 @@
 
      .sidebar .nav-link:hover {
          background-color: #555;
-     }
-
-     /* Main Content Styling */
-     body {
-         margin-left: 250px;
-         /* Match the sidebar width */
-         padding: 20px;
      }
 
      .container {
@@ -131,14 +111,8 @@
          transform: translateY(-2px);
      }
 
-     /* #customer:active,#customer_id:active {
-         background-color: #3f73a7;
-         transform: translateY(0);
-     } */
-
      #customer:focus,#customer_id:focus {
          outline: 2px solid #80bdff;
-         /* Focus outline for accessibility */
          outline-offset: 2px;
      }
 
@@ -149,380 +123,495 @@
          display: block;
      }
 
-
      #home1 img {
          width: 1293px;
          height: 400px;
          display: block;
      }
 
-         #orderlist,#add_stock {
-             background-color: rgb(9, 156, 126);
-             
-             color: white;
-             
-             border: none;
-             padding: 10px 20px;
-             
-             font-size: 16px;
-            
-             font-weight: bold;
-             
-             border-radius: 8px;
-             
-             cursor: pointer;
-            
-             transition: background-color 0.3s, transform 0.2s;
-            
-             margin-top: 20px;
-             
-         }
+     #orderlist,#add_stock {
+        background-color: rgb(9, 156, 126);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        margin-top: 20px;
+     }
     
-         #orderlist:hover,
-                 #add_stock:hover
+     #orderlist:hover,#add_stock:hover
         {
-             background-color: grey;
-            
-             transform: translateY(-2px);
-             
-         }
+        background-color: grey;
+        transform: translateY(-2px);
+      }
     
-         #orderlist:active,
-                 #add_stock:active
-         {
-             background-color: #1e7e34;
-             /* Dark green background when pressed */
-             transform: translateY(0);
-             /* Reset lifting effect on press */
-         }
+     #orderlist:active, #add_stock:active
+      {
+        background-color: #1e7e34;
+        transform: translateY(0);
+      }
     
-         #orderlist:focus,
-         #add_stock:focus {
-             outline: 2px solid #80bdff;
-             /* Light blue outline on focus */
-             outline-offset: 2px;
-             /* Add space around outline */
-         }
-
+     #orderlist:focus, #add_stock:focus {
+        outline: 2px solid #80bdff;
+        outline-offset: 2px;
+      }
       
+      #addStockFormContainer {
+          background-color: #f9f9f9;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          max-width: 600px;
+          margin: 20px auto;
+          display: none; 
+      }
+      
+      #addStockFormContainer h3 {
+          font-size: 24px;
+          color: #333;
+          text-align: center;
+          margin-bottom: 20px;
+      }
+      
+      #addStockForm label {
+          font-size: 16px;
+          color: #333;
+          margin-bottom: 8px;
+          display: block;
+      }
+      
+      #addStockForm input {
+          width: 100%;
+          padding: 10px;
+          font-size: 14px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+      }
+      
+      #addStockForm input:focus {
+          border-color: #4CAF50;
+          outline: none;
+      }
 
-         /* stocks */
+      #addStockForm button {
+          background-color:#f44336;
+          color:white;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          border: none;
+          border-radius: 4px;
+          margin: 10px 5px;
+      }
 
-         /* Style for the container of the form */
-#addStockFormContainer {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 20px auto;
-    display: none; /* Initially hidden */
-}
+      #addStockForm button[type="submit"] {
+          background-color: rgb(9, 156, 126);
+          color: white;
+      }
 
-/* Heading for the form */
-#addStockFormContainer h3 {
-    font-size: 24px;
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-}
+      #addStockForm button[type="submit"]:hover{
+          background-color: grey;
+      }
+      
+      #cancelForm {
+          background-color: #f44336;
+          color: white;
+      }
+      
+      #addStockForm button:hover {
+          opacity: 0.9;
+      }
+      
+      /* Overlay styling */
+      #overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+      }
+      
+      /* Modal styling */
+      #modal {
+          display: none;
+          width:40%;
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: #fff;
+          padding: 20px;
+          z-index: 1000;
+          border-radius: 5px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      #form-container {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+      }
 
-/* Style for the form labels */
-#addStockForm label {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 8px;
-    display: block;
-}
+      #form-container h1 {
+          font-size: 24px;
+          margin-bottom: 10px;
+          color: #333;
+          text-align: center;
+      }
 
-/* Style for the form input fields */
-#addStockForm input {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
+      #form-container input[type="text"],
+      #form-container textarea,
+      #form-container input[type="number"] {
+          width: 100%;
+          margin: 10px 0px;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+          box-sizing: border-box;
+      }
 
-/* Focus effect for input fields */
-#addStockForm input:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
+      #form-container textarea {
+          resize: none;
+      }
+      
+      #form-container input:focus,
+      #form-container textarea:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+      
+      #form-container button {
+          margin:15px 0px;
+          padding: 10px 20px;
+          font-size: 16px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          /* transition: background 0.3s ease; */
+      }
 
-/* Style for the buttons */
-#addStockForm button {
-    background-color:#f44336;
-    color:white;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    margin: 10px 5px;
-}
+      #form-container button[type="submit"] {
+          background: rgb(9, 156, 126);
+          color: #fff;
+      }
 
-/* Style for the submit button */
-#addStockForm button[type="submit"] {
-    background-color: rgb(9, 156, 126);
-    color: white;
-}
-#addStockForm button[type="submit"]:hover{
-    background-color: grey;
-}
-/* Style for the cancel button */
-#cancelForm {
-    background-color: #f44336;
-    color: white;
-}
+      #form-container button[type="submit"]:hover {
+          background:grey
+      }
+        
+      #form-container button[type="button"] {
+        background: #f44336;
+        color: #fff;
+        margin-left: 10px;
+     }
+     
+     #form-container button[type="button"]:hover {
+         background: #d32f2f;
+     }
+     
+     #additem_button,#orderitem_button {
+         background-color: rgb(9, 156, 126);
+         color: white;
+         font-size: 16px;
+         padding: 10px 20px;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         margin: 11px 0 11px 0 ;
+         transition: background-color 0.3s ease;
+     }
+     
+     #additem_button:hover,#orderitem_button:hover {
+         background-color: grey;
+     }
+     
+     #item_select {
+         width: 200px;
+         font-size: 14px;
+         padding: 8px;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         background-color: #f9f9f9;
+         color: #333;
+         cursor: pointer;
+     }
+     
+     #item_select option {
+         padding: 5px;
+     }
+     
+     #item_select:hover {
+         border-color: #888;
+     }
+     
+     #orderokbtn,#orderremovebtn{
+         background-color: rgb(9, 156, 126);
+         color: white;
+         font-size: 16px;
+         padding: 8px 18px;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         transition: background-color 0.3s ease;
+         margin: 0 15px 0 20px;
+     }
+     
+     #orderokbtn:hover,#orderremovebtn:hover{
+         background-color: grey;
+     }
+     
+     .htag_order{
+         text-align: center;
+         color: #2c3e50;
+             font-size: 1.8em;
+             margin-bottom: 0.5em;
+     }
 
-/* Hover effects for buttons */
-#addStockForm button:hover {
-    opacity: 0.9;
-}
+     h5 {
+         color: #2c3e50;
+         font-size: 20px;
+         margin-bottom: 0.5em;
+         text-transform: uppercase;
+     }
+     
+     p {
+         font-size: 1em;
+         line-height: 1.5;
+     }
+     
+     .order_container {
+         max-width: 100%;
+         margin: 2em auto;
+         padding: 1em;
+         border-radius: 8px;
+         /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+     }
+     
+     strong {
+         color: #2c3e50;
+     }
 
-/* Overlay styling */
-#overlay {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    /* Semi-transparent black */
-    z-index: 999;
-    /* Ensures it appears above the content */
-}
+     /* No Order Details Found */
+     .no-order {
+         color: #e74c3c;
+         font-size: 1.2em;
+         text-align: center;
+     }
+     
+     .printbtn {
+         padding: 10px 20px;
+         margin: 10px 0;
+         font-size: 16px;
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         transition: background-color 0.3s ease;
+     }
 
-/* Modal styling */
-#modal {
-    display: none;
-    width:40%;
-    /* Hidden by default */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 20px;
-    z-index: 1000;
-    /* Ensures it appears above the overlay */
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+     .printbtn:hover {
+         background-color: #45a049;
+     }
+     
+     .printbtn-container {
+         text-align: right;
+         margin-top: 20px;
+     }
+     
+     .main-container {
+         
+         width: 80%;
+         margin: 10 auto;
+         background: white;
+         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         padding: 20px;
+         border-radius: 8px;
+     }
 
+     .fas {
+         color: red;
+     }
+     
+     .removeRowButton{
+         border: none;
+     }
+     
+     hr {
+         border: none;
+         border-top: 1px dotted #333;
+         height: 1px;
+         width: 100%;
+         margin: 20px 0;
+     }
+     
+     #newUserForm,#olduserform {
+         max-width: 500px;
+         margin: 0 auto;
+         padding: 20px;
+         background-color: #f9f9f9;
+         border-radius: 8px;
+         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+         display: flex;
+         flex-direction: column;
+         width: 300px;
+         margin: 20px auto;
+         border: 1px solid #ccc;
+         border-radius: 8px;
+       }
+       
+       #newUserForm h3 {
+           text-align: center;
+           color: #333;
+           font-size: 24px;
+           margin-bottom: 20px;
+       }
+       
+       #userform input {
+           padding: 8px;
+           margin-bottom: 15px;
+           font-size: 1rem;
+           border: 1px solid red;
+           border-radius: 4px;
+           outline: none;
+           transition: border-color 0.3s ease;
+       }
+       
+       #userform input:focus {
+           border-color: #4CAF50;
+       }
+       
+       #userform button {
+           padding: 10px;
+           background-color: rgb(9, 156, 126);
+           color: white;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+           font-size: 1rem;
+           transition: background-color 0.3s ease;
+       }
+       
+       #userform label {
+           font-size: 14px;
+           color: #555;
+           margin: 5px 0;
+       }
 
-/* Responsive Design: Adjust layout for smaller screens */
-/* @media (max-width: 600px) {
-    #addStockFormContainer {
-        width: 90%;
+       #createorder{
+           text-align: center;
+           border: 1px solid ;
+           border-radius:5px 40px 5px 40px ;
+           background-color:gray;
+           color: white;
+           padding: 10px 0px;
+       }
+       
+       #searchuser_h3{
+           margin: 14px 0px;
+       }
+       
+       .search-box {
+           width: fit-content;
+           height: fit-content;
+           position: relative;
+       }
+       
+       .input-search {
+           height: 50px;
+           width: 50px;
+           border-style: none;
+           padding: 10px;
+           font-size: 18px;
+           letter-spacing: 2px;
+           border-radius: 25px;
+           transition: all .5s ease-in-out;
+           background-color: #22a6b3;
+           padding-right: 40px;
+           color:black;
+       }
+       
+       .input-search::placeholder {
+           color: rgba(145, 25, 25, 0.5);
+           font-size: 18px;
+           letter-spacing: 2px;
+           font-weight: 100;
+           border: 1px  rgba(145, 25, 25, 0.5);
+       }
+       
+       .btn-search {
+           width: 50px;
+           height: 50px;
+           border-style: none;
+           font-size: 20px;
+           font-weight: bold;
+           outline: none;
+           cursor: pointer;
+           border-radius: 50%;
+           position: absolute;
+           right: 0px;
+           color: black;
+           background-color: transparent;
+           pointer-events: painted;
+       }
+       
+       .btn-search:focus~.input-search {
+           width: 300px;
+           border-radius: 0px;
+           background-color: transparent;
+           border-bottom: 1px solid rgba(255, 255, 255, .5);
+           transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+       }
+       
+       .input-search:focus {
+           width: 300px;
+           border-radius: 0px;
+           background-color: transparent;
+           border-bottom: 1px solid rgba(255, 255, 255, .5);
+           transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+       }
+       
+       #orderformlabel{
+           font-size: 20px;
+           color: black;
+           margin-bottom: 20px;
+       }
+       
+       .removeRowButton {
+           width: 50px;
+           height: 50px;
+           font-size: 20px;
+           border-radius: 50%;
+           color: white;
+           /* background-color: rgb(9, 156, 126); */
+           margin-left: 10px;
+       }
+       
+       .removeRowButton:hover {
+           /* background-color: grey; */
+           transform: scale(1.1);
+       }
+
+       .removeRowButton i {
+           pointer-events: none;
+       }
+    
+
+@media (max-width: 768px) {
+    #newUserForm {
         padding: 15px;
     }
-} */
-
-
-
-/* Form Container Styling */
-#form-container {
-    display: flex;
-    flex-direction: column;
-    /* Stack items vertically */
-    gap: 15px;
-    /* Add spacing between form elements */
 }
-
-#form-container h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #333;
-    text-align: center;
-}
-
-
-#form-container input[type="text"],
-#form-container textarea,
-#form-container input[type="number"] {
-    width: 100%;
-    margin: 10px 0px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-#form-container textarea {
-    resize: none;
-}
-
-#form-container input:focus,
-#form-container textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-#form-container button {
-    margin:15px 0px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    /* transition: background 0.3s ease; */
-}
-
-#form-container button[type="submit"] {
-    background: rgb(9, 156, 126);
-    color: #fff;
-}
-
-#form-container button[type="submit"]:hover {
-    background:grey
-    /* Darker blue on hover */
-}
-
-#form-container button[type="button"] {
-    background: #f44336;
-    /* Red background */
-    color: #fff;
-    /* White text */
-    margin-left: 10px;
-    /* Space from Submit button */
-}
-
-#form-container button[type="button"]:hover {
-    background: #d32f2f;
-    /* Darker red on hover */
-}
-
-#additem_button,#orderitem_button {
-    background-color: rgb(9, 156, 126);
-    color: white;
-    font-size: 16px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 11px 0 11px 0 ;
-    transition: background-color 0.3s ease;
-}
-
-#additem_button:hover,#orderitem_button:hover {
-    background-color: grey;
-   
-}
-
-#item_select {
-    width: 200px;
-    font-size: 14px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    color: #333;
-    cursor: pointer;
-}
-#item_select option {
-    padding: 5px;
-}
-
-/* Hover effect for dropdown */
-#item_select:hover {
-    border-color: #888;
-  
-}
-
-/* orderobbutton */
-#orderokbtn,#orderremovebtn{
-    background-color: rgb(9, 156, 126);
-        color: white;
-        font-size: 16px;
-        padding: 8px 18px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin: 0 15px 0 20px;
-    }
-#orderokbtn:hover,#orderremovebtn:hover{
-    background-color: grey;
-}
-
-.htag_order{
-    text-align: center;
-    color: #2c3e50;
-        font-size: 1.8em;
-        margin-bottom: 0.5em;
-}
-h5 {
-    color: #2c3e50;
-    font-size: 20px;
-    margin-bottom: 0.5em;
-    text-transform: uppercase;
-}
-
-p {
-    font-size: 1em;
-    /* margin: 0.5em 0; */
-    line-height: 1.5;
-}
-
-/* Container Styles */
-.order_container {
-    max-width: 100%;
-    margin: 2em auto;
-    padding: 1em;
-    /* background-color: #ffffff; */
-    border-radius: 8px;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
-}
-
-/* Highlighted Text */
-strong {
-    color: #2c3e50;
-}
-
-/* No Order Details Found */
-.no-order {
-    color: #e74c3c;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.printbtn {
-    padding: 10px 20px;
-    margin: 10px 0;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.printbtn:hover {
-    background-color: #45a049;
-}
-.printbtn-container {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.main-container {
-    
-    width: 80%;
-    margin: 10 auto;
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 8px;
-}
-
 @media print {
     .printbtn-container {
         visibility: hidden;
@@ -530,3 +619,14 @@ strong {
         opacity: 0;
     }
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -16,12 +16,6 @@
             overlay.style.display = 'none';
         });
 
-        // Hide modal and overlay when clicking on the overlay itself
-// overlay.addEventListener('click', () => {
-//     modal.style.display = 'none';
-//     overlay.style.display = 'none';
-// });
-
         // Submit form using fetch
         form.addEventListener('submit', (e) => {
             e.preventDefault();

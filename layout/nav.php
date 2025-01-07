@@ -1,6 +1,9 @@
  <nav class="sidebar" role="navigation" aria-label="Sidebar">
         <ul class="nav">
             <li class="nav-item">
+                <a class="nav-link" href="">LOGO</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="">Home</a>
             </li>
             <li class="nav-item">
