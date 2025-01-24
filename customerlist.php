@@ -3,6 +3,27 @@ require_once "layout/conn.php";
 include "layout/header.php";
 include "layout/nav.php";
 ?>
+<?php
+$sql = "
+    SELECT 
+        cd.detail_id, 
+        cd.fullname, 
+        cd.phone, 
+        GROUP_CONCAT(c.customer_address SEPARATOR ', ') AS addresses 
+    FROM 
+        customer_detail cd
+    LEFT JOIN 
+        customer_address c 
+    ON 
+        cd.detail_id = c.customer_id
+    GROUP BY 
+        cd.detail_id, cd.fullname, cd.phone
+";
+$result = $conn->query($sql);
+if (!$result) {
+    die("Database query failed: " . $conn->error);
+}
+?>
 
 <div id="customer-section" class="container">
     <h1>List of Users</h1>
@@ -17,23 +38,21 @@ include "layout/nav.php";
             </tr>
         </thead>
         <tbody id="customertable">
-            <?php
-            $sql = "SELECT detail_id, fullname, user_address, phone FROM userdetail";
-            $result = $conn->query($sql);
+          <?php
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . htmlspecialchars($row['detail_id']) . "</td>
+                <td>" . htmlspecialchars($row['fullname']) . "</td>
+                <td>" . htmlspecialchars($row['addresses']) . "</td>
+                <td>" . htmlspecialchars($row['phone']) . "</td>
+              </tr>";
+    }
+} else {
+    echo "<tr><td colspan='4'>No users found.</td></tr>";
+}
+?>
 
-            if ($result && $result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
-                            <td>" . htmlspecialchars($row['detail_id']) . "</td>
-                            <td>" . htmlspecialchars($row['fullname']) . "</td>
-                            <td>" . htmlspecialchars($row['user_address']) . "</td>
-                            <td>" . htmlspecialchars($row['phone']) . "</td>
-                          </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='4'>No users found.</td></tr>";
-            }
-            ?>
         </tbody>
     </table>
 </div>
@@ -47,18 +66,21 @@ include "layout/nav.php";
             <label for="fullName">Full Name</label>
             <input type="text" id="fullName" name="fullname" placeholder="Enter your full name" required>
 
-            <label for="address">Address</label>
-            <textarea id="address" name="address" placeholder="Enter your address" rows="4" required></textarea>
-
+            
             <label for="phone">Phone Number</label>
             <input type="number" id="phone" name="phone" placeholder="Enter your phone number" required>
-
+            
+            <div id="addressFields">
+            <label for="address-1">Address</label>
+            <textarea id="address-1" name="addresses[]" placeholder="Enter your address" rows="4" required></textarea>
+            </div>
+            <button type="button" id="addAddress">Add Another Address</button>
+            
             <button type="submit">Submit</button>
             <button type="button" id="closeModal">Close</button>
         </form>
     </div>
 </div>
 
-<script src ="script/customerlist.js">
-</script>
+<script src ="script/customerlist.js" defer></script>
 <?php include "layout/footer.php"; ?>

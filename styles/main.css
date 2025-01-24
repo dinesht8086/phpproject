@@ -129,7 +129,7 @@
          display: block;
      }
 
-     #orderlist,#add_stock {
+     #orderlist,#add_stock,#add_shop {
         background-color: rgb(9, 156, 126);
         color: white;
         border: none;
@@ -142,19 +142,19 @@
         margin-top: 20px;
      }
     
-     #orderlist:hover,#add_stock:hover
+     #orderlist:hover,#add_stock:hover,#add_shop:hover
         {
         background-color: grey;
         transform: translateY(-2px);
       }
     
-     #orderlist:active, #add_stock:active
+     #orderlist:active, #add_stock:active, #add_shop:active
       {
         background-color: #1e7e34;
         transform: translateY(0);
       }
     
-     #orderlist:focus, #add_stock:focus {
+     #orderlist:focus, #add_stock:focus, #add_shop:focus{
         outline: 2px solid #80bdff;
         outline-offset: 2px;
       }
@@ -252,12 +252,16 @@
           z-index: 1000;
           border-radius: 5px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          overflow-y: auto;
+        max-height: 80%;
       }
       
       #form-container {
           display: flex;
           flex-direction: column;
           gap: 15px;
+          overflow-y: auto;
+        max-height: 70vh;
       }
 
       #form-container h1 {
@@ -455,7 +459,7 @@
          margin: 20px 0;
      }
      
-     #newUserForm,#olduserform {
+     /* #newUserForm,#olduserform {
          max-width: 500px;
          margin: 0 auto;
          padding: 20px;
@@ -506,7 +510,88 @@
            font-size: 14px;
            color: #555;
            margin: 5px 0;
-       }
+       } */
+
+           #newUserForm,#olduserform {
+               width: 50%;
+               margin: 0 auto;
+               padding: 20px;
+               border: 1px solid #ccc;
+               border-radius: 8px;
+               background-color: #f9f9f9;
+               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+               font-family: Arial, sans-serif;
+            max-height: 400px;
+                
+                overflow-y: auto;
+           }
+    
+           #newUserForm h3 {
+               text-align: center;
+               color: #333;
+               margin-bottom: 20px;
+           }
+    
+           /* Styles for form labels */
+           #newUserForm label {
+               display: block;
+               margin-bottom: 8px;
+               font-weight: bold;
+               color: #555;
+           }
+    
+           /* Styles for form inputs */
+           #newUserForm input[type="text"],
+           #newUserForm textarea {
+               width: 100%;
+               padding: 10px;
+               margin-bottom: 15px;
+               border: 1px solid #ccc;
+               border-radius: 4px;
+               font-size: 16px;
+           }
+    
+           #newUserForm textarea {
+               resize: none;
+           }
+    
+           /* Button styles */
+           #create_user {
+               display: block;
+               width: 100%;
+               padding: 10px;
+               background-color: #007BFF;
+               color: white;
+               border: none;
+               border-radius: 4px;
+               font-size: 16px;
+               cursor: pointer;
+               transition: background-color 0.3s;
+           }
+    
+           #create_user:hover {
+               background-color: #0056b3;
+           }
+    
+           /* Additional button styles for "Add Another Address" */
+           #addAddress {
+               background-color: #28a745;
+               margin-bottom: 15px;
+                display: block;
+                    width: 100%;
+                    padding: 10px;
+                    
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+           }
+    
+           #addAddress:hover {
+               background-color: #218838;
+           }
 
        #createorder{
            text-align: center;
@@ -528,6 +613,7 @@
        }
        
        .input-search {
+           cursor: pointer;
            height: 50px;
            width: 50px;
            border-style: none;
@@ -606,12 +692,75 @@
            pointer-events: none;
        }
     
+        #shop_head {
+            text-align: center;
+            color: #333;
+        }
 
-@media (max-width: 768px) {
-    #newUserForm {
-        padding: 15px;
-    }
-}
+        #shop_form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* label {
+            font-weight: bold;
+            color: #555;
+        } */
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #shopsave_btn {
+            margin: 10px;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+         #shopsave_btn:hover {
+            background-color: #218838;
+        }
+        .shopclose_btn{
+            margin: 10px;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .shopclose_btn:hover {
+            background-color: #c82333;
+        }
+
+        #map {
+            width: 100%;
+            height: 300px;
+            background-color: #e9e9e9;
+            margin: 10px 0;
+        }
+
+
 @media print {
     .printbtn-container {
         visibility: hidden;

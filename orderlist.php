@@ -7,8 +7,8 @@ include "layout/header.php";
 ?>
 <?php
 // Fetch all customers to populate the dropdown for selecting a customer
-$customerSql = "SELECT detail_id, fullname FROM userdetail";
-$customerResult = $conn->query($customerSql);
+$customerSql = "SELECT detail_id, fullname FROM customer_detail";
+$customerResult =  $conn->query($customerSql);
 
 // Check if a customer is selected
 $selectedCustomerId = isset($_GET['customer_id']) ? $_GET['customer_id'] : null;

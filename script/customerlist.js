@@ -48,3 +48,24 @@
         });
     });
 
+document.getElementById('addAddress').addEventListener('click', function () {
+        const addressFields = document.getElementById('addressFields');
+        const addressCount = addressFields.getElementsByTagName('textarea').length + 1;
+
+        // Create a new label
+        const newLabel = document.createElement('label');
+        newLabel.setAttribute('for', `address-${addressCount}`);
+        newLabel.textContent = `Address ${addressCount}`;
+
+        // Create a new textarea
+        const newTextarea = document.createElement('textarea');
+        newTextarea.setAttribute('id', `address-${addressCount}`);
+        newTextarea.setAttribute('name', 'addresses[]');
+        newTextarea.setAttribute('placeholder', 'Enter your address');
+        newTextarea.setAttribute('rows', '4');
+        newTextarea.setAttribute('required', true);
+
+        // Append the new label and textarea
+        addressFields.appendChild(newLabel);
+        addressFields.appendChild(newTextarea);
+    }); 

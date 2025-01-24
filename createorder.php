@@ -19,46 +19,77 @@ include "layout/nav.php";
         <div class="search-box">
             <form id="searchForm" action="" method="POST" >
     <button  type = "submit" name ="searchUser" class="btn-search"><i class="fas fa-search"></i></button>
-    <input type="text" id ="phone" name ="phone" class="input-search" placeholder="Type to Search..." autocomplete="off" required>
+    <input type="number" id ="phone" name ="phone" class="input-search" placeholder="Type to Search..." autocomplete="off" required>
 </form>
   </div>
 
+<?php
+if (isset($_POST['searchUser'])) {
+    $phone = $_POST['phone'];
+    
+    // Corrected SQL query to join customer_detail and customer_address
+    $stmt = $conn->prepare("
+        SELECT 
+            cd.detail_id, 
+            cd.fullname, 
+            cd.phone, 
+            GROUP_CONCAT(c.customer_address SEPARATOR ', ') AS addresses 
+        FROM 
+            customer_detail cd
+        JOIN 
+            customer_address c ON cd.detail_id = c.customer_id
+        WHERE 
+            cd.phone = ?
+        GROUP BY 
+            cd.detail_id, cd.fullname, cd.phone
+    ");
+    
+    $stmt->bind_param("s", $phone);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    <?php
-    if (isset($_POST['searchUser'])) {
-        $phone = $_POST['phone'];
-        $stmt = $conn->prepare("SELECT detail_id, fullname, phone,user_address FROM userdetail WHERE phone = ?");
-        $stmt->bind_param("s", $phone);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Display the user details along with addresses
+       echo "<div id='olduserform'>";
+echo "<p><strong>Name:</strong> " . htmlspecialchars($row['fullname']) . "</p>";
+echo "<p><strong>Mobile:</strong> " . htmlspecialchars($row['phone']) . "</p>";
 
-        if ($result && $result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            // echo "<p>User Found:</p>";
-            echo "<div id='olduserform'>";
-            echo "<p><strong>Name:</strong> " . htmlspecialchars($row['fullname']) . "</p>";
-            echo "<p><strong>Mobile:</strong> " . htmlspecialchars($row['phone']) . "</p>";
-            echo "<p><strong>Adress:</strong> " . htmlspecialchars($row['user_address']) . "</p>";
-            echo "<input type='hidden' id='existingUserId' value='" . htmlspecialchars($row['detail_id']) . "'>";
-            echo "</div>";
-            // echo "<p><strong>Name:</strong> " . htmlspecialchars($row['fullname']) . "</p>";
-            // echo "<p><strong>Mobile:</strong> " . htmlspecialchars($row['phone']) . "</p>";
-            // echo "<p><strong>Adress:</strong> " . htmlspecialchars($row['user_address']) . "</p>";
-            // echo "<input type='hidden' id='existingUserId' value='" . htmlspecialchars($row['detail_id']) . "'>";
-            // echo "</div>";
-         } else {
+$addresses = explode(', ', $row['addresses']);
+echo "<label for='userAddress'><strong>Address:</strong></label>";
+echo "<select id='userAddress' name='userAddress' required>";
+echo "<option value=''>-- Select an Address --</option>"; // Default option
+
+// Generate options for each address
+foreach ($addresses as $index => $address) {
+    echo "<option value='" . htmlspecialchars($address) . "'>" . htmlspecialchars($address) . "</option>";
+}
+
+echo "</select>";
+echo "<input type='hidden' id='existingUserId' name='existingUserId' value='" . htmlspecialchars($row['detail_id']) . "'>";
+echo "</div>";
+
+    } else {
                 // If no user is found, show the "Create New User" form
                 ?>
                 <div id="newUserForm">
                     <h3>Create New User</h3>
-                    <form id="userform" action="address.php" method="POST">
+                    <form id="userform" action="address.php" method="POST" autocomplete="off">
                         <label for="fullname">Full Name:</label>
                         <input type="text" id="fullname" name="fullname" required>
+
                         <label for="phone">Mobile Number:</label>
                         <input type="text" id="phone" name="phone" value="<?php echo htmlspecialchars($phone); ?>" required>
-                        <label for="user_address">Address:</label>
-                        <input type="text" id="user_address" name="address" required>
-                        <button type="submit" name="createuser">Create User</button>
+                        
+                        <div id="addressFields">
+                        <label for="user_address">Address</label>
+                        <textarea id="auser_address" name="addresses[]"  rows="4" required></textarea>
+                        </div>
+                        <button type="button" id="addAddress">Add Another Address</button>
+                        <!-- <label for="user_address">Address:</label>
+                        <input type="text" id="user_address" name="address" required> -->
+
+                        <button type="submit" id ="create_user" name="createuser">Create User</button>
                     </form>
                 </div>
                 <?php
@@ -81,7 +112,7 @@ include "layout/nav.php";
     <select id="customer" name="customer_id" required>
         <option value="">-- Select Customer --</option>
         <?php
-        $sql = "SELECT detail_id, fullname FROM userdetail";
+        $sql = "SELECT detail_id, fullname FROM customer_detail";
         $result = $conn->query($sql);
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -241,17 +272,32 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json()) // Expect JSON response from the server
             .then(newUser => {
                 // Check if newUser data is returned
-                console.log('New user added:', newUser);
+                  console.log('New user added:', newUser);
 
                 // Display new user details in the 'newUserForm' div
-                const userDetails = `
-                    <p><strong>Name:</strong> ${newUser.name}</p>
-                    <p><strong>Mobile:</strong> ${newUser.phone}</p>
-                    <p><strong>Address:</strong> ${newUser.address}</p>
-                `;
+                // const userDetails = `
+                //     <p><strong>Name:</strong> ${newUser.name}</p>
+                //     <p><strong>Mobile:</strong> ${newUser.phone}</p>
+                //     <p><strong>Address:</strong> ${newUser.addresses}</p>
+                // `;
+
+                  const addressOptions = newUser.addresses.map(address => 
+        `<option value="${address}">${address}</option>`
+    ).join('');
+
+    const userDetails = `
+        <p><strong>Name:</strong> ${newUser.name}</p>
+        <p><strong>Mobile:</strong> ${newUser.phone}</p>
+        <label for="addressSelect"><strong>Select Address:</strong></label>
+        <select id="addressSelect" name="selectedAddress" required>
+            ${addressOptions}
+        </select>
+    `;
+
 
                 // Insert the user details into the 'newUserForm' element
                 document.getElementById('newUserForm').innerHTML = userDetails;
+                // document.getElementById('olduserform').innerHTML = userDetails;
 
                 // Add the new user to the dropdown
                 const customerDropdown = document.getElementById('customer');
@@ -277,7 +323,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
+ document.getElementById('addAddress').addEventListener('click', function() {
+        var addressFields = document.getElementById('addressFields');
+        var newAddressField = document.createElement('div');
+        newAddressField.innerHTML = `
+            <label for="user_address">Address</label>
+            <textarea name="addresses[]" rows="4" required></textarea>
+        `;
+        addressFields.appendChild(newAddressField);
+    });
 
 
 </script>

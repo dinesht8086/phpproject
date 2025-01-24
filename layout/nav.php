@@ -7,6 +7,9 @@
                 <a class="nav-link" href="">Home</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="shoplist.php">Shop List</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="stocklist.php">Stocks</a>
             </li>
             <li class="nav-item">

@@ -81,98 +81,76 @@ include "layout/header.php";
 include "layout/conn.php";   
 
 $orderDetailId = $lastOrderId;
-if(isset($_GET['order_id'])){
-    $orderDetailId = $_GET['order_id'];
-} 
-
-// Fetch the latest order's items to display in the table
-$orderItemsSql = "SELECT oi.order_item_id, s.particulars, oi.quantity, oi.sub_total 
-                  FROM order_items oi 
-                  JOIN stocks s ON oi.stock_item_id = s.id 
-                  WHERE oi.order_id =".$orderDetailId;
-                  
-$orderItemsResult = $conn->query($orderItemsSql);
-
-
-
-// Fetch the latest order and customer details from userdetail table
-$orderSelectSql = "SELECT o.order_id, o.order_subtotal, o.discount_total, o.order_total, ud.fullname, ud.user_address, ud.phone 
-                   FROM billingsystem.order o
-                   JOIN userdetail ud ON o.user_id = ud.detail_id
-                   WHERE o.order_id = ".$orderDetailId;
-            
-                   
-$orderResult = $conn->query($orderSelectSql);
-
-
-?>
-<div class = "main-container">
-<div class="printbtn-container">
-     <button class="printbtn" onclick="window.print()">Print</button>
-</div>
-<hr>
-
-<div class = " order_container">
-<h3 class = "htag_order">CRACKERS</h2>
-
-<hr>
-
-<!-- <h2>Order Details</h2> -->
-
-<?php
-if ($orderResult && $orderResult->num_rows > 0) {
-    // Fetch customer and order details
-    $orderData = $orderResult->fetch_assoc();
-    echo "<h5>Bill to:</h3>";
-    echo "<p>" . htmlspecialchars($orderData['fullname']) ."</p>" ;
-    echo  "<p>" . htmlspecialchars($orderData['user_address']) . "<p>";
-    echo "<p><strong>phone:</strong> " . htmlspecialchars($orderData['phone']) . "</p>";
-    // echo "<h3>Order Summary</h3>";
-    // echo "<p><strong>Order ID:</strong> " . htmlspecialchars($orderData['order_id']) . "</p>";
-    // echo "<p><strong>Subtotal:</strong> " . htmlspecialchars($orderData['order_subtotal']) . "</p>";
-    // echo "<p><strong>Discount:</strong> " . htmlspecialchars($orderData['discount_total']) . "</p>";
-    //  echo "<p><strong>Total:</strong> " . htmlspecialchars($orderData['order_total']) . "</p>";
-} else {
-    echo "<p>No order details found.</p>";
+if (isset($_GET['order_id'])) {
+    $orderDetailId = intval($_GET['order_id']);
 }
+
+$orderSelectSql = "
+    SELECT o.order_id, o.order_subtotal, o.discount_total, o.order_total, 
+           cd.fullname, cd.phone, GROUP_CONCAT(ca.customer_address SEPARATOR ', ') AS addresses
+    FROM billingsystem.order AS o
+    JOIN customer_detail AS cd ON o.user_id = cd.detail_id
+    LEFT JOIN customer_address AS ca ON cd.detail_id = ca.customer_id
+    WHERE o.order_id = $orderDetailId
+    GROUP BY o.order_id, cd.detail_id
+";
+$orderResult = $conn->query($orderSelectSql);
+$orderData = $orderResult ? $orderResult->fetch_assoc() : null;
+
+$orderItemsSql = "
+    SELECT oi.order_item_id, s.particulars, oi.quantity, oi.sub_total 
+    FROM order_items oi 
+    JOIN stocks s ON oi.stock_item_id = s.id 
+    WHERE oi.order_id = $orderDetailId
+";
+$orderItemsResult = $conn->query($orderItemsSql);
 ?>
-<hr>
-
-</div>
-
+<div class="main-container">
+    <div class="printbtn-container">
+        <button class="printbtn" onclick="window.print()">Print</button>
+    </div>
+    <hr>
+    <div class="order_container">
+        <h3 class="htag_order">CRACKERS</h3>
+        <hr>
+        <?php if ($orderData): ?>
+            <h5>Bill to:</h5>
+            <p><strong>Name:</strong> <?= htmlspecialchars($orderData['fullname']) ?></p>
+            <p><strong>Address:</strong> <?= htmlspecialchars($orderData['addresses']) ?></p>
+            <p><strong>Phone:</strong> <?= htmlspecialchars($orderData['phone']) ?></p>
+            <hr>
+        <?php else: ?>
+            <p>No order details found.</p>
+        <?php endif; ?>
+    </div>
     <table id="selectedItemsTable">
-    <thead>
-        <tr>
-            <th>No.</th>
-            <th>Particulars</th>
-            <th>Quantity</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        if ($orderItemsResult && $orderItemsResult->num_rows > 0) {
-            while ($row = $orderItemsResult->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($row['order_item_id']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['particulars']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['sub_total']) . "</td>";
-                echo "</tr>";
-            }
-            // Add a row for the total
-            echo "<tr  style='background-color:grey;'>";
-            echo "<td colspan='3' style='text-align: center; color:white; font-weight: bold;'>Total:</td>";
-            echo "<td style=' color:white; font-weight: bold;'>" . htmlspecialchars($orderData['order_total']) . "</td>";
-            echo "</tr>";
-        } else {
-            echo "<tr><td colspan='4'>No items found</td></tr>";
-        }
-        ?>
-    </tbody>
-</table>
-</div>   
- <?php
-include "layout/footer.php"; 
-?>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Particulars</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($orderItemsResult && $orderItemsResult->num_rows > 0): ?>
+                <?php while ($row = $orderItemsResult->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['order_item_id']) ?></td>
+                        <td><?= htmlspecialchars($row['particulars']) ?></td>
+                        <td><?= htmlspecialchars($row['quantity']) ?></td>
+                        <td><?= htmlspecialchars($row['sub_total']) ?></td>
+                    </tr>
+                <?php endwhile; ?>
+                <tr style="background-color:grey;">
+                    <td colspan="3" style="text-align: center; color:white; font-weight: bold;">Total:</td>
+                    <td style="color:white; font-weight: bold;"><?= htmlspecialchars($orderData['order_total']) ?></td>
+                </tr>
+            <?php else: ?>
+                <tr><td colspan="4">No items found</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+<?php include "layout/footer.php"; ?>
    

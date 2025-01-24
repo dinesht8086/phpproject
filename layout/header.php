@@ -9,5 +9,6 @@ require_once "layout/conn.php";
     <title>Crackers</title>
     <link rel = "stylesheet" href = "styles/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
 </head>
 <body>
